@@ -1,6 +1,7 @@
 package com.dig.blog.app.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.dig.blog.app.payloads.ApiResponse;
 import com.dig.blog.app.payloads.UserDto;
 import com.dig.blog.app.service.UserService;
 
@@ -53,9 +55,15 @@ public class UserController {
 		
 	}
 	
-	@DeleteMapping("/{id}")//here no need to write @pathvariable because we used "id" in mapping same as in parameter   
-	public String deleteUserById(@PathVariable Integer id){
+//	@DeleteMapping("/{id}")//here no need to write @pathvariable because we used "id" in mapping same as in parameter   
+//	public String deleteUserById(@PathVariable Integer id){
+//		userService.deleteUser(id);
+//		return "the user is deleted with id :  "+id;
+//	}
+	
+	@DeleteMapping("/{id}")
+	public ResponseEntity<ApiResponse> deleteUser(@PathVariable Integer id){
 		userService.deleteUser(id);
-		return "the user is deleted with id :  "+id;
+		return new ResponseEntity<ApiResponse>(new ApiResponse("user deleted successfuly",true),HttpStatus.OK);
 	}
 }
