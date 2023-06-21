@@ -1,4 +1,4 @@
-package com.dig.blog.app.service;
+package com.dig.blog.app.service.Impl;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,6 +10,7 @@ import com.dig.blog.app.entities.User;
 import com.dig.blog.app.exceptions.ResourceNotFoundException;
 import com.dig.blog.app.payloads.UserDto;
 import com.dig.blog.app.repository.UserRepo;
+import com.dig.blog.app.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -70,6 +71,7 @@ public class UserServiceImpl implements UserService{
 		
 	User user = userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId) );
 	userRepo.delete(user);
+	
 	}
 	 
 	//converting dto to user because we used UserDto as parameter not User so it necessary
