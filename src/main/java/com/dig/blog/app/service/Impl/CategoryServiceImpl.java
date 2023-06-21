@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dig.blog.app.entities.Category;
-import com.dig.blog.app.entities.User;
 import com.dig.blog.app.exceptions.ResourceNotFoundException;
 import com.dig.blog.app.payloads.CategoryDto;
 import com.dig.blog.app.repository.CategoryRepo;
@@ -41,9 +40,11 @@ public class CategoryServiceImpl implements CategoryService{
 		Category cat1 = categoryRepo.findById(categoryId).orElseThrow(()-> new ResourceNotFoundException("Category","Id",categoryId) );
         cat1.setCategoryId(categorydto.getCategoryId());
         cat1.setCategoryTitle(categorydto.getCategoryTitle());
-        cat1.setCategoryDiscription(categorydto.getCategoryDiscription());
+        cat1.setCategoryDescription(categorydto.getCategoryDescription());
         
-     CategoryDto catDtoo = this.modelMapper.map(cat1, CategoryDto.class);
+      Category catt =  categoryRepo.save(cat1);
+        
+     CategoryDto catDtoo = this.modelMapper.map(catt, CategoryDto.class);
 		
 		return catDtoo;
 	}

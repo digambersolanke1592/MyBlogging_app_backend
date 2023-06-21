@@ -21,11 +21,13 @@ import lombok.Setter;
 public class Category {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	int categoryId;
-	@Column(name = "tite")
+	
+	@Column(name = "title")
 	String categoryTitle;
-	@Column(name = "discription")
-	String categoryDiscription;
+	
+	@Column(name = "description")
+	String categoryDescription;
 	
 }

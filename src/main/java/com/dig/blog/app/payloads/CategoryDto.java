@@ -16,6 +16,6 @@ public class CategoryDto {
 	
 	String categoryTitle;
 	
-	String categoryDiscription;
+	String categoryDescription;
 	
 }
