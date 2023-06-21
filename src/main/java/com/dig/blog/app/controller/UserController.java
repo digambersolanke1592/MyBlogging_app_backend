@@ -3,6 +3,8 @@ package com.dig.blog.app.controller;
 import java.util.List;
 import java.util.Map;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +29,7 @@ public class UserController {
 	private UserService userService;
 	
 	@PostMapping("/")
-	public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
+	public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
 	    UserDto userdto = userService.createUser(userDto);
 		return new ResponseEntity<>(userdto,HttpStatus.CREATED);
 		
@@ -47,8 +49,8 @@ public class UserController {
 		
 	}
 	
-	@PutMapping("/{id}")
-	public ResponseEntity<UserDto> updateUser( @RequestBody UserDto userDto ,@PathVariable Integer id){
+	@PutMapping("/{id}")   //below this @valid annotation is used to enable the annotations used for validation purpose
+	public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto ,@PathVariable Integer id){
 		
 	    UserDto userdto = userService.updateuser(userDto, id);
 	    return new ResponseEntity<>(userdto,HttpStatus.OK);

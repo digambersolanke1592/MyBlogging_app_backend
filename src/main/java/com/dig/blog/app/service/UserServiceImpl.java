@@ -3,6 +3,7 @@ package com.dig.blog.app.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.dig.blog.app.entities.User;
@@ -15,6 +16,9 @@ public class UserServiceImpl implements UserService{
 
 	@Autowired
 	private UserRepo userRepo;
+	
+	@Autowired
+	private ModelMapper modelMapper;
 	
 	@Override
 	public UserDto createUser(UserDto userDto) {
@@ -64,29 +68,34 @@ public class UserServiceImpl implements UserService{
 	public void deleteUser(Integer userId) {
 		// TODO Auto-generated method stub
 		
-	User user = 	userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId) );
+	User user = userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","Id",userId) );
 	userRepo.delete(user);
 	}
 	 
 	//converting dto to user because we used UserDto as parameter not User so it necessary
 	public User dtoToUser (UserDto userDto) {
-		User user = new User();
-		user.setId(userDto.getId());
-		user.setName(userDto.getName());
-		user.setEmail(userDto.getEmail());
-		user.setPassword(userDto.getPassword());
-		user.setAbout(userDto.getAbout());
+		User user = this.modelMapper.map(userDto, User.class) ;  //by using modelmapper
 		return user;
+//		User user = new User();
+//		user.setId(userDto.getId());
+//		user.setName(userDto.getName());
+//		user.setEmail(userDto.getEmail());
+//		user.setPassword(userDto.getPassword());
+//		user.setAbout(userDto.getAbout());
+//		return user;
 		
 	}
 	//converting user to dto 
 	public UserDto userToDto(User user) {
-		UserDto userDto = new UserDto();
-		userDto.setId(user.getId());
-		userDto.setName(user.getName());
-		userDto.setEmail(user.getEmail());
-		userDto.setPassword(user.getPassword());
-		userDto.setAbout(user.getAbout());
-		return userDto;
+		UserDto userDto = this.modelMapper.map(user,UserDto.class);
+		return userDto; 
+//		UserDto userDto = new UserDto();
+//		userDto.setId(user.getId());
+//		userDto.setName(user.getName());
+//		userDto.setEmail(user.getEmail());
+//		userDto.setPassword(user.getPassword());
+//		userDto.setAbout(user.getAbout());
+//		return userDto;
+		
 	}
 }
