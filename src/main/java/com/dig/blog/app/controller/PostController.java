@@ -1,9 +1,17 @@
 package com.dig.blog.app.controller;
 
+
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.hibernate.engine.jdbc.StreamUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dig.blog.app.config.AppConstant;
 import com.dig.blog.app.entities.Post;
@@ -21,6 +30,7 @@ import com.dig.blog.app.entities.User;
 import com.dig.blog.app.payloads.ApiResponse;
 import com.dig.blog.app.payloads.PostDto;
 import com.dig.blog.app.payloads.PostResponse;
+import com.dig.blog.app.service.FileService;
 import com.dig.blog.app.service.PostService;
 
 @RestController
@@ -29,6 +39,12 @@ public class PostController {
 
 	@Autowired
 	private PostService postService;
+	
+	@Autowired
+	FileService fileService;
+	
+	@Value("${project.image}")
+	String path1;
 	
 	@PostMapping("/user/{userId}/category/{categoryId}/posts")//for number of parameter increase use another pattern
 	public ResponseEntity<PostDto> createPost(
@@ -103,18 +119,41 @@ public class PostController {
 		 return new ResponseEntity<>(postResp,HttpStatus.OK);
 	}
 	
+	//api for searching by keywords
 	@GetMapping("/post/search/{keyword}")
 	public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable("keyword") String keyword){
 	List<PostDto> posts = postService.searchPosts(keyword);
 	return new ResponseEntity<List<PostDto>>(posts,HttpStatus.OK);
 	}
+	
+	//api for uploading or updating the image
+	@PostMapping("/post/image/upload/{postId}")
+	public ResponseEntity<PostDto> uploadPostImage(@RequestParam ("image") MultipartFile image ,@PathVariable Integer postId) throws IOException{
+		
+		PostDto postdto = postService.getPostById(postId);//this line can gives postid not found exception
+
+		String fileName = fileService.uploadImage(path1, image);
+		postdto.setImageName(fileName);
+		PostDto updatedpost = postService.updatePostDto(postdto, postId);
+		return new ResponseEntity<PostDto>(updatedpost,HttpStatus.OK);
+	}
+	
+	//api for downloading image or serve image
+	@GetMapping(value = "post/image/{imageName}",produces = MediaType.IMAGE_JPEG_VALUE)
+	public  void downloadingImage(@PathVariable("imageName") String imageName,HttpServletResponse response) throws IOException {
+		
+	InputStream resource =	fileService.getResource(path1, imageName);
+	response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+	StreamUtils.copy(resource, response.getOutputStream());
+	}
+	
 //	@PostMapping("/")
 //	public String createList(@RequestBody List<User> user) {
 //		
 //		//System.out.println(user);
 //		
 //		User user1 = new User();
-//		for(User l:user) {
+//		for(User l:user) {                  //this code is not related to this project
 //			
 //			
 //		//	System.out.println(l.toString());

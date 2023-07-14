@@ -37,6 +37,6 @@ public class Category {
 	private String categoryDescription;
 	
 	@OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-	private List<Post> posts = new ArrayList<>();
+	private List<Post> posts = new ArrayList<>();  //one category can have many post
 	
 }
