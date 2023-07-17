@@ -1,10 +1,17 @@
 package com.dig.blog.app.payloads;
 
 
+import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import com.dig.blog.app.entities.Role;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -25,7 +32,10 @@ public class UserDto {
 	@NotEmpty
 	@Size(min = 4,max = 10,message = "the password is not valid")
 	//@Pattern(regexp = "")
+	//@JsonIgnore
 	String password;
 	@NotEmpty
 	String about;
+	
+	Set<RoleDto> roles = new HashSet<>();
 }

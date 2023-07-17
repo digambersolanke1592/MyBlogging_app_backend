@@ -3,8 +3,10 @@ package com.dig.blog.app.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,6 +21,7 @@ import com.dig.blog.app.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true) //for giving access of api to admin or public 
 public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
 	@Autowired
@@ -50,7 +53,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		.csrf()
 		.disable()
 		.authorizeHttpRequests()
-		.antMatchers("/api/v1/auth/login").permitAll()  //this url is now public no security for it
+		.antMatchers("/api/v1/auth/**").permitAll()  //this url is now public no security for it
+		.antMatchers(HttpMethod.GET).permitAll()  //all get api are public
 		.anyRequest()
 		.authenticated()
 		.and()

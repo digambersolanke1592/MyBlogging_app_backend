@@ -14,7 +14,7 @@ import lombok.Data;
 public class Role {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	//@GeneratedValue(strategy = GenerationType.IDENTITY)  //we are making id constant
 	private int id;
 	
 	private String rname;

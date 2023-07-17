@@ -5,6 +5,9 @@ import java.util.List;
 import com.dig.blog.app.payloads.UserDto;
 
 public interface UserService {
+	
+	//for registration of new user
+	UserDto registerNewuser(UserDto user);
 
 	UserDto createUser(UserDto user);
 	
